@@ -20,11 +20,11 @@ abstract class RayCastShape {
   VecPair intersect_line(PVector line_base, PVector line_dir) {
     return null;
   }
-  
+
   RayCastShape(Entity owner, PVector pos_offset, boolean enabled) {
     this.owner = owner;
     this.pos_offset = pos_offset;
-    if(enabled) enable();
+    if (enabled) enable();
   }
   RayCastShape(Entity owner, PVector pos_offset) {
     this(owner, pos_offset, true);
@@ -55,11 +55,10 @@ class RayCastShapeCylinder extends RayCastShape {
 
   VecPair intersect_line(PVector line_base, PVector line_dir) {
     line_base = PVector.sub(line_base, get_pos());
-    
     float cylinder_height_half = cylinder_height/2;
-
-    float p_half = (line_base.x*line_dir.x + line_base.z*line_dir.z);
-    float q = (sq(line_base.x) + sq(line_base.z) - sq(cylinder_radius));
+    float a = sq(line_dir.x)+sq(line_dir.z);
+    float p_half = (line_base.x*line_dir.x + line_base.z*line_dir.z)/a;
+    float q = (sq(line_base.x) + sq(line_base.z) - sq(cylinder_radius))/a;
     float s_sq = sq(p_half) - q;
     println(s_sq);
     if (s_sq <= 0) return null;
@@ -87,7 +86,8 @@ class RayCastShapeCylinder extends RayCastShape {
         sol.append(sol2);
       }
     }
-    if(sol.a == null || sol.b == null) return null;
+    if (sol.a == null || sol.b == null) return null;
+
     sol.a.add(get_pos());
     sol.b.add(get_pos());
     return sol;

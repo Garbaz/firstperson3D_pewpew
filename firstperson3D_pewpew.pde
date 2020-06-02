@@ -15,8 +15,8 @@ PImage pew_image;
 GLWindow gl_window;
 
 void settings() {
-  size(800, 800, P3D);
-  //fullScreen(P3D);
+  //size(800, 800, P3D);
+  fullScreen(P3D);
 }
 void setup() {
   gl_window = (GLWindow)getSurface().getNative();
@@ -88,20 +88,15 @@ void draw_ui(float dt) {
   ui_begin();
 
   //Debug Text
+  debug_show();
+
   fill(0);
   // textSize(14);
   textAlign(RIGHT, TOP);
   text(frameRate, width, 0);
-  textAlign(LEFT, TOP);
-  text("position = " + round(perspective_player.pos, 1), 0, 0);
-  text("heading = " + round(degrees(perspective_player.orient_angle_horizontal), 1) + ", " + round(degrees(perspective_player.orient_angle_vertical), 1), 0, 20);
-  text("velocity = " + round(perspective_player.vel, 1), 0, 40);
-  text("|velocity| = " + round(perspective_player.vel.mag(), 3), 0, 60);
-  text("|velocity.xz| = " + round(sqrt(sq(perspective_player.vel.x) + sq(perspective_player.vel.z)), 3), 0, 80);
-  text("on_ground = " + perspective_player.on_ground, 0, 100);
-  text("head_pos = " + round(perspective_player.get_eye_position(), 1), 0, 120);
-  text(test_rot, 0, 140);
-  text(c, 0, 160);
+
+  //text(test_rot, 0, 140);
+  //text(c, 0, 160);
 
   //text(players.get(1).pos.toString(), 0, 140);
 
@@ -114,13 +109,15 @@ void draw_ui(float dt) {
 
   fill(#00ffff);
 
-  translate(width/2-300, height/2-300);
+  translate(width-300, 300);
   final float MAP_SCALE = 70;
   circle(local_player.pos.x, local_player.pos.z, MAP_SCALE*2*local_player.COLLISION_RADIUS);
-  stroke(#ff0000);
-  line(local_player.pos.x, local_player.pos.z, local_player.pos.x+10*local_player.vel.x, local_player.pos.z+10*local_player.vel.z);
-  stroke(#0000ff);
-  line(local_player.pos.x, local_player.pos.z, local_player.pos.x+10*local_player.GROUND_MAX_SPEED*sin(local_player.orient_angle_horizontal), local_player.pos.z+10*local_player.GROUND_MAX_SPEED*cos(local_player.orient_angle_horizontal));
+  drawArrow_(vec_xz(local_player.get_eye_position()), vec_xz(local_player.get_eye_direction()), 100);
+  //stroke(#ff0000);
+  //line(local_player.pos.x, local_player.pos.z, local_player.pos.x+10*local_player.vel.x, local_player.pos.z+10*local_player.vel.z);
+  //stroke(#0000ff);
+  //line(local_player.pos.x, local_player.pos.z, local_player.pos.x+10*local_player.GROUND_MAX_SPEED*sin(local_player.orient_angle_horizontal), local_player.pos.z+10*local_player.GROUND_MAX_SPEED*cos(local_player.orient_angle_horizontal));
+
 
 
   //for (Prop p : props) {

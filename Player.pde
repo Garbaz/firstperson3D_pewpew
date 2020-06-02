@@ -168,6 +168,7 @@ class Player extends Entity {
 
   void hit(VecPair intersects, float damage) {
     set_stance(!is_standing());
+    props.add(new PropBox(intersects.a, VEC(0.1, 0.1, 0.1), false));
   }
 
   void get_ground_speed() {
