@@ -5,7 +5,7 @@
 // step_margin is for "smooth" walking up steps
 PVector collision_cuboid_cylinder_aa(PVector cuboid_pos, PVector cuboid_dim, PVector cylinder_pos, float cylinder_height, float cylinder_radius, float step_margin) {
   float intersect_y = abs(cuboid_pos.y-cylinder_pos.y) - (cuboid_dim.y+cylinder_height)/2;
-  if (intersect_y < 0) { // Shapes interesct at least in y-directions
+  if (intersect_y <= 0) { // Shapes interesct at least in y-directions
     PVector collision_xz = collision2D_rect_circle(VEC(cuboid_pos.x, cuboid_pos.z), VEC(cuboid_dim.x, cuboid_dim.z), VEC(cylinder_pos.x, cylinder_pos.z), cylinder_radius);
     if (collision_xz != null) { // Shapes intersect
       if (collision_xz.magSq() > sq(intersect_y) || (sign(cylinder_pos.y-cuboid_pos.y) > 0 && -intersect_y < step_margin)) { // Intersection happened from the top or bottom

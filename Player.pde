@@ -87,7 +87,8 @@ class Player extends Entity {
     //}
 
 
-
+    vec_add_scaled(vel, VEC_DOWN, GRAVITY * dt);
+    vec_add_scaled(pos, vel, dt);
     on_ground = false;
     for (Prop pr : props) {
       if (!(pr instanceof PropBox)) continue; //TODO: Not nice
@@ -105,8 +106,8 @@ class Player extends Entity {
     }
     //if(on_ground && vel.y != 0)println(vel.y);
     if (this == local_player) update_input(dt);
-    vec_add_scaled(vel, VEC_DOWN, GRAVITY * dt);
-    vec_add_scaled(pos, vel, dt);
+    
+    
 
     gun.update(dt, gun_shooting, this);
   }

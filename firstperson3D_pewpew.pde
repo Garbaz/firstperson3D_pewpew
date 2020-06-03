@@ -24,6 +24,8 @@ void setup() {
   frameRate(144);
   gl_window = (GLWindow)getSurface().getNative();
   noCursor();
+  mouseX = width/2;
+  mouseY = height/2;
   //gl_window.confinePointer(true);
 
   setup_key_binds();
@@ -50,7 +52,7 @@ void setup() {
   //for (int i = 1; i < 25; i++) {
   //  props.add(new PropBox(VEC(-3, 0, 2*i), VEC(2, 0.1*i, 2), true));
   //}
-  load_level("test_level.csv");
+  load_level("test_level - Kopie.csv");
 
   local_player = new Player();
   perspective_player = local_player;
