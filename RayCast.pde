@@ -60,7 +60,6 @@ class RayCastShapeCylinder extends RayCastShape {
     float p_half = (line_base.x*line_dir.x + line_base.z*line_dir.z)/a;
     float q = (sq(line_base.x) + sq(line_base.z) - sq(cylinder_radius))/a;
     float s_sq = sq(p_half) - q;
-    println(s_sq);
     if (s_sq <= 0) return null;
     float s = sqrt(s_sq);
 

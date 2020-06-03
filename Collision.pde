@@ -25,14 +25,15 @@ PVector collision2D_rect_circle(PVector rect_pos, PVector rect_dim, PVector circ
   PVector rect_radius = PVector.mult(rect_dim, 0.5);
   if (dist_x <= circle_radius + rect_radius.x && dist_y <= circle_radius + rect_radius.y) {
     if (dist_x <= rect_radius.x || dist_y <= rect_radius.y) {
-      if (dist_x < dist_y) {
-        if (rel_pos.x < rel_pos.y) {
+      if (dist_x/rect_dim.x < dist_y/rect_dim.y) {
+        if (rel_pos.x/rect_dim.x < rel_pos.y/rect_dim.y) {
           return new PVector(0, -(circle_radius+rect_radius.y-dist_y));
+          
         } else {
           return new PVector(0, circle_radius+rect_radius.y-dist_y);
         }
       } else {
-        if (rel_pos.x < rel_pos.y) {
+        if (rel_pos.x/rect_dim.x < rel_pos.y/rect_dim.y) {
           return new PVector(circle_radius+rect_radius.x-dist_x, 0);
         } else {
           return new PVector(-(circle_radius+rect_radius.x-dist_x), 0);

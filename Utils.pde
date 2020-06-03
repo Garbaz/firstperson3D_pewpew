@@ -67,6 +67,42 @@ float round(float x, int sig_digits) {
   return round(s*x)/s;
 }
 
+//String nff(float x, int letters) {
+//  String s = str(x);
+//  s = s.substring(0, min(letters, s.length()-1));
+//  String spaces = new String(new char[max(0, s.length()-letters)]).replace("\0", " ");
+//  return spaces+s;
+//}
+
+
+//String nff(PVector p, int letters_per_dim) {
+//  return "("+nff(p.x, letters_per_dim)+", "+nff(p.y, letters_per_dim)+", "+nff(p.z, letters_per_dim)+")";
+//}
+
+String nfs(PVector v, int left, int right) {
+  return "("+nfs(v.x, left, right)+", "+nfs(v.y, left, right)+", "+nfs(v.z, left, right)+")";
+}
+
+String nfss(float x, int left, int right) {
+  String s = nfs(x, left, right);
+  char[] sa = s.toCharArray();
+  for(int i = 0; i < sa.length; i++) {
+    if(!(sa[i] == ' ' || sa[i] == '-')) {
+      if(sa[i] == '0') {
+        sa[i] = ' ';
+      } else {
+        break;
+      }
+    }
+  }
+  return new String(sa);
+}
+
+String nfss(PVector v, int left, int right) {
+  return "("+nfss(v.x, left, right)+", "+nfss(v.y, left, right)+", "+nfss(v.z, left, right)+")";
+}
+
+
 
 int deltatime_lasttime = 0;
 float deltatime() {

@@ -13,6 +13,7 @@ void setup_key_binds() {
   bind_key("player_jump", 0x20);
   bind_key("player_crouch", 0x11);
   bind_key("player_shoot", -LEFT);
+  bind_key("player_scope", -RIGHT);
 }
 
 
@@ -60,7 +61,10 @@ FloatPair mouse_input() {
   if (focused) {
     float mouseDeltaX = mouseX - width/2;
     float mouseDeltaY = mouseY - height/2;
-      
+    
+    //println(mouseDeltaX);
+    //println(mouseDeltaY);
+    
     gl_window.warpPointer(width/2, height/2);
 
     //if (local_player.on_ground) mouseDeltaX += test_rot;

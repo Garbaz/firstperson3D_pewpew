@@ -33,7 +33,8 @@ class PropBox extends Prop {
 
   void show(float dt) {
     push();
-    fill(0xEE);
+    fill(230);
+    stroke(60);
     //if (test_boop) {
     //  fill(#B53FD1);
     //  test_boop = false;
@@ -41,4 +42,8 @@ class PropBox extends Prop {
     boxAt(pos.x, pos.y, pos.z, dimensions.x, dimensions.y, dimensions.z);
     pop();
   }
+}
+
+void add_prop(Prop p) {
+  props.add(p);
 }

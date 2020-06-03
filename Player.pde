@@ -12,7 +12,7 @@ class Player extends Entity {
   final float GRAVITY = 9.8;
 
   final float COLLISION_RADIUS = 0.5;
-  final float COLLISION_STEP_MARGIN = 0.15;
+  final float COLLISION_STEP_MARGIN = 0.11;
 
   final PVector GUN_OFFSET_PERSP = VEC(0.2, -0.25, 0.25);
   final PVector GUN_OFFSET_OTHER = VEC(0.3, -0.4, 0.5);
@@ -51,7 +51,9 @@ class Player extends Entity {
     dir_move.normalize();
 
     if (is_keybind_pressed("player_jump") && on_ground) {
+      //println(vel);
       vec_add_scaled(vel, VEC_UP, JUMP_SPEED);
+      //vel.y = JUMP_SPEED;
       on_ground = false;
     }
 
@@ -77,30 +79,34 @@ class Player extends Entity {
   }
 
   void update(float dt) {
-    //PHYSICS:
-    vec_add_scaled(vel, VEC_DOWN, GRAVITY * dt);
-    vec_add_scaled(pos, vel, dt);
+
     //if (pos.y < 0) {
     //  pos.y = 0;
     //  vel.y = 0;
     //  on_ground = true;
     //}
+
+
+
     on_ground = false;
     for (Prop pr : props) {
-      if (!(pr instanceof PropBox)) continue; //TODO: Not the best way
+      if (!(pr instanceof PropBox)) continue; //TODO: Not nice
 
       PVector col = collision_cuboid_cylinder_aa(pr.pos, ((PropBox)pr).dimensions, pos, body_height, COLLISION_RADIUS, COLLISION_STEP_MARGIN);
       if (col != null) {
         pos.add(col);
         PVector normal_vel = col.copy().normalize();
-        normal_vel.mult(constrain(vel.dot(normal_vel), -1, 0));
+        normal_vel.mult(min(vel.dot(normal_vel), 0));
         vel.sub(normal_vel);
-
         if (col.y > 0) {
           on_ground = true;
         }
       }
     }
+    //if(on_ground && vel.y != 0)println(vel.y);
+    if (this == local_player) update_input(dt);
+    vec_add_scaled(vel, VEC_DOWN, GRAVITY * dt);
+    vec_add_scaled(pos, vel, dt);
 
     gun.update(dt, gun_shooting, this);
   }
@@ -111,7 +117,7 @@ class Player extends Entity {
     //PVector dir_right = VEC(dir_forward.z, 0, -dir_forward.x);
 
 
-    if (perspective_player == this) {
+    if (this == perspective_player) {
       camera(0, 0, 0, 0, 0, 1, 0, -1, 0);
       translate(GUN_OFFSET_PERSP.x, GUN_OFFSET_PERSP.y, GUN_OFFSET_PERSP.z);
       gun.show(dt);
@@ -194,4 +200,16 @@ class Player extends Entity {
   void rotate_orientation(float delta_horizontal, float delta_vertical) {
     set_orientation(orient_angle_horizontal+delta_horizontal, orient_angle_vertical+delta_vertical);
   }
+}
+
+void spawn_local_player(boolean team_ab) {
+  if (team_ab) {
+    local_player.pos = spawn_team_cross.copy();
+  } else {
+    local_player.pos = spawn_team_star.copy();
+  }
+}
+
+void add_player(PVector pos) {
+  players.add(new Player(pos));
 }

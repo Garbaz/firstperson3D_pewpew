@@ -54,16 +54,21 @@ PVector collision2D_rect_circle(PVector rect_pos, PVector rect_dim, PVector circ
   PVector rect_radius = PVector.mult(rect_dim, 0.5);
   if (dist_x <= circle_radius + rect_radius.x && dist_y <= circle_radius + rect_radius.y) {
     if (dist_x <= rect_radius.x || dist_y <= rect_radius.y) {
-      if (dist_x < dist_y) {
-        if (rel_pos.x < rel_pos.y) {
+      if (dist_x/rect_dim.x < dist_y/rect_dim.y) {
+        if (rel_pos.x/rect_dim.x < rel_pos.y/rect_dim.y) {
+          println("a");
           return new PVector(0, -(circle_radius+rect_radius.y-dist_y));
+          
         } else {
+          println("b");
           return new PVector(0, circle_radius+rect_radius.y-dist_y);
         }
       } else {
-        if (rel_pos.x < rel_pos.y) {
+        if (rel_pos.x/rect_dim.x < rel_pos.y/rect_dim.y) {
+          println("c");
           return new PVector(circle_radius+rect_radius.x-dist_x, 0);
         } else {
+          println("d");
           return new PVector(-(circle_radius+rect_radius.x-dist_x), 0);
         }
       }
@@ -79,6 +84,7 @@ PVector collision2D_rect_circle(PVector rect_pos, PVector rect_dim, PVector circ
   }
   return null;
 }
+
 //PVector collision2D_square_circle(PVector square_pos, PVector square_dim, PVector circle_pos, float circle_radius) {
 //  PVector rel_pos = PVector.sub(square_pos, circle_pos);
 //  float dist_x = abs(rel_pos.x), dist_y = abs(rel_pos.y);

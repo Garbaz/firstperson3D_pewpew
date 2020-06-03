@@ -31,6 +31,7 @@ class Gun {
 
   void show(float dt) {
     //shader(player_gun_shader);
+    scale(1.4);
     shape(player_gun_shape);
 
     translate(gun_shooty_end_offset.x, gun_shooty_end_offset.y, gun_shooty_end_offset.z);

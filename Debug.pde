@@ -7,7 +7,8 @@ void debug_show() {
   fill(0);
   textAlign(LEFT, TOP);
   debug_text("position = " + round(perspective_player.pos, 1));
-  debug_text("heading = " + round(degrees(perspective_player.orient_angle_horizontal), 1) + ", " + round(degrees(perspective_player.orient_angle_vertical), 1));
+  debug_text("foot_pos = " + round(perspective_player.get_foot_pos(), 2));
+  debug_text("heading = " + round(degrees(perspective_player.orient_angle_horizontal), 3) + ", " + round(degrees(perspective_player.orient_angle_vertical), 1));
   debug_text("eye_pos = " + round(perspective_player.get_eye_position(), 1));
   debug_text("eye_dir = " + round(perspective_player.get_eye_direction(), 1));
   debug_text("velocity = " + round(perspective_player.vel, 1));
