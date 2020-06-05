@@ -1,6 +1,8 @@
 import com.jogamp.newt.opengl.GLWindow;
+import processing.net.*;
 
 ArrayList<Player> players = new ArrayList<Player>();
+HashMap<Integer, Player> network_players = new HashMap<Integer, Player>();
 Player perspective_player;
 Player local_player;
 
@@ -17,8 +19,8 @@ PImage pew_image;
 GLWindow gl_window;
 
 void settings() {
-  //size(800, 800, P3D);
-  fullScreen(P3D);
+  size(800, 800, P3D);
+  //fullScreen(P3D);
 }
 void setup() {
   frameRate(144);
@@ -58,6 +60,11 @@ void setup() {
   perspective_player = local_player;
   players.add(local_player);
   spawn_local_player(true);
+
+  init_network_id();
+  network_players.put(network_id, local_player);
+  
+  net_connect("127.0.0.1");
   
   //players.add(new Player(VEC(5.6, 40, 0)));
   deltatime_lasttime = millis();
@@ -87,8 +94,9 @@ void draw() {
 
   perspective_player.show(dt);//Drawing perspective player last because of pew transparency....
 
-
-
+  net_update(dt);
+  //println(local_player.pack());
+  
   draw_ui(dt);
 }
 

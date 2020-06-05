@@ -1,4 +1,4 @@
-class Player extends Entity {
+class Player extends Entity implements NetPackable {
   final float HEIGHT_STANDING = 1.8;
   final float HEIGHT_CROUCHED = 1.1;
   final float HEIGHT_EYE_OFFSET = -0.1; // How far down the camera is from the top of the player
@@ -105,10 +105,10 @@ class Player extends Entity {
       }
     }
     //if(on_ground && vel.y != 0)println(vel.y);
-    if (this == local_player) update_input(dt);
+    if (this == local_player) {
+      update_input(dt);
+    }
     
-    
-
     gun.update(dt, gun_shooting, this);
   }
 
@@ -194,12 +194,39 @@ class Player extends Entity {
   }
 
   void set_orientation(float horizontal, float vertical) {
-    orient_angle_horizontal = horizontal % TWO_PI;
+    orient_angle_horizontal = (horizontal+TWO_PI) % TWO_PI;
     orient_angle_vertical = constrain(vertical, -HALF_PI, HALF_PI);
   }
 
   void rotate_orientation(float delta_horizontal, float delta_vertical) {
     set_orientation(orient_angle_horizontal+delta_horizontal, orient_angle_vertical+delta_vertical);
+  }
+
+  String pack() {
+    String s = "";
+    s += net_vec_to_string(pos) + ";";
+    s += net_vec_to_string(vel) + ";";
+    s += orient_angle_horizontal + ";";
+    s += orient_angle_vertical + ";";
+    s += gun_shooting + ";";
+    return s;
+  }
+  
+  void unpack(String s) {
+    String[] lines = s.split(";");
+    //for(String l : lines) {
+    //  println(l);
+    //}
+    //println(lines.length);
+    if(lines.length == 5) {
+      pos = net_string_to_vec(lines[0]);
+      vel = net_string_to_vec(lines[1]);
+      orient_angle_horizontal = float(lines[2]);
+      orient_angle_vertical = float(lines[3]);
+      gun_shooting = boolean(lines[4]);
+    } else {
+      println("ERROR: Could not unpack: \"" + s + "\"");
+    }
   }
 }
 
