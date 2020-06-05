@@ -65,6 +65,7 @@ void setup() {
   spawn_local_player(true);
 
   net_host();
+  //net_connect("192.168.178.127");
   
   //players.add(new Player(VEC(5.6, 40, 0)));
   deltatime_lasttime = millis();
