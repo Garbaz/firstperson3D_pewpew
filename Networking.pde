@@ -61,7 +61,12 @@ void recieve_client(Client c) {
       if (id_pack.length == 2) {
         int id = int(id_pack[0]);
         String pack = id_pack[1];
-        network_players.get(id).unpack(pack);
+        Player p = network_players.get(id);
+        if (p == null) {
+          p = new Player();
+          network_players.put(id, p);
+        }
+        p.unpack(pack);
       }
     }
   }

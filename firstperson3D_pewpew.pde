@@ -64,7 +64,7 @@ void setup() {
   init_network_id();
   network_players.put(network_id, local_player);
   
-  net_connect("127.0.0.1");
+  net_host();
   
   //players.add(new Player(VEC(5.6, 40, 0)));
   deltatime_lasttime = millis();
