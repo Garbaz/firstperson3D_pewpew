@@ -238,6 +238,6 @@ void spawn_local_player(boolean team_ab) {
   }
 }
 
-void add_player(PVector pos) {
-  players.add(new Player(pos));
+void add_player(int net_id, Player p) {
+  players.put(net_id, p);
 }

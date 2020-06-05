@@ -6,10 +6,10 @@ float net_update_timer = 0;
 Client net_client;
 Server net_server;
 
-int network_id;
+int net_local_id;
 
 void init_network_id() {
-  network_id = int(random(0, 1<<30));
+  net_local_id = int(random(0, 1<<30));
 }
 
 void net_connect(String server_ip) {
@@ -42,7 +42,7 @@ void net_update(float dt) {
     net_update_timer = 0;
 
     if (net_server != null) {
-      for (HashMap.Entry<Integer, Player> entry : network_players.entrySet()) {
+      for (HashMap.Entry<Integer, Player> entry : players.entrySet()) {
         int id = entry.getKey();
         Player p = entry.getValue();
         net_server.write(net_package_str(id, p.pack()));
@@ -56,24 +56,27 @@ void net_update(float dt) {
 void recieve_client(Client c) {
   if (c.available() > 0) {
     String[] lines = c.readString().split("\n");
+    println(lines);
     for (String l : lines) {
       String[] id_pack = l.split(";", 2);
       if (id_pack.length == 2) {
         int id = int(id_pack[0]);
-        String pack = id_pack[1];
-        Player p = network_players.get(id);
-        if (p == null) {
-          p = new Player();
-          network_players.put(id, p);
+        if (id != net_local_id) {
+          String pack = id_pack[1];
+          Player p = players.get(id);
+          if (p == null) {
+            p = new Player();
+            players.put(id, p);
+          }
+          p.unpack(pack);
         }
-        p.unpack(pack);
       }
     }
   }
 }
 
 String net_package_str(String s) {
-  return net_package_str(network_id, s);
+  return net_package_str(net_local_id, s);
 }
 
 String net_package_str(int id, String s) {

@@ -1,8 +1,8 @@
 import com.jogamp.newt.opengl.GLWindow;
 import processing.net.*;
 
-ArrayList<Player> players = new ArrayList<Player>();
-HashMap<Integer, Player> network_players = new HashMap<Integer, Player>();
+//ArrayList<Player> players = new ArrayList<Player>();
+HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 Player perspective_player;
 Player local_player;
 
@@ -55,15 +55,15 @@ void setup() {
   //  props.add(new PropBox(VEC(-3, 0, 2*i), VEC(2, 0.1*i, 2), true));
   //}
   load_level("test_level - Kopie.csv");
-
+  
+  init_network_id();
+  
   local_player = new Player();
   perspective_player = local_player;
-  players.add(local_player);
+  add_player(net_local_id, local_player);
+  
   spawn_local_player(true);
 
-  init_network_id();
-  network_players.put(network_id, local_player);
-  
   net_host();
   
   //players.add(new Player(VEC(5.6, 40, 0)));
@@ -77,7 +77,7 @@ void draw() {
   for (Prop p : props) {
     p.update(dt);
   }
-  for (Player p : players) {
+  for (Player p : players.values()) {
     p.update(dt);
   }
   update_camera();
@@ -86,7 +86,7 @@ void draw() {
     p.show(dt);
   }
 
-  for (Player p : players) {
+  for (Player p : players.values()) {
     if (p != perspective_player) {
       p.show(dt);
     }
