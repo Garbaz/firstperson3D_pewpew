@@ -54,7 +54,7 @@ void setup() {
   //for (int i = 1; i < 25; i++) {
   //  props.add(new PropBox(VEC(-3, 0, 2*i), VEC(2, 0.1*i, 2), true));
   //}
-  load_level("test_level - Kopie.csv");
+  load_level("levels/test_level3.csv");
 
   init_network_id();
 
