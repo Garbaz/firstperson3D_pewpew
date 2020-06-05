@@ -64,7 +64,7 @@ void recieve_client(Client c) {
           String pack = id_pack[1];
           Player p = players.get(id);
           if (p == null) {
-            println("New Player with net_id " + id);1
+            println("New Player with net_id " + id);
             p = new Player();
             players.put(id, p);
           }
