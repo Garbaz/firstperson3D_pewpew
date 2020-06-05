@@ -4,7 +4,9 @@ class Player extends Entity implements NetPackable {
   final float HEIGHT_EYE_OFFSET = -0.1; // How far down the camera is from the top of the player
   float body_height = HEIGHT_STANDING;
 
-  final float GROUND_MAX_SPEED = 7;
+  final float GROUND_MAX_SPEED_STANDING = 7;
+  final float GROUND_MAX_SPEED_CROUCHED = 4;
+  float ground_max_speed = GROUND_MAX_SPEED_STANDING;
   final float GROUND_ACCELERATION = 25; // and deceleration
   final float AIR_MAX_STRAFE_SPEED = 0.8;
   final float AIR_ACCELERATION = 100;
@@ -20,6 +22,9 @@ class Player extends Entity implements NetPackable {
   boolean gun_shooting = false;
 
   RayCastShape hitbox;
+
+  final int INIT_HEALTH = 100;
+  int health = INIT_HEALTH;
 
   boolean on_ground = false;
 
@@ -65,9 +70,9 @@ class Player extends Entity implements NetPackable {
     if (on_ground) {
       vec_add_scaled(vel, dir_move, 2 * GROUND_ACCELERATION * dt); // Acceleration    
       vel.setMag(constrain(vel.mag() - GROUND_ACCELERATION * dt, 0, Float.MAX_VALUE)); // Deceleration
-
-      if (dir_move.dot(vel) > GROUND_MAX_SPEED) {
-        vel.setMag(GROUND_MAX_SPEED);
+      
+      if (dir_move.dot(vel) > ground_max_speed) {
+        vel.setMag(ground_max_speed);
       }
     } else { // in air
       if (dir_move.dot(vel) < AIR_MAX_STRAFE_SPEED) {
@@ -108,7 +113,7 @@ class Player extends Entity implements NetPackable {
     if (this == local_player) {
       update_input(dt);
     }
-    
+
     gun.update(dt, gun_shooting, this);
   }
 
@@ -159,8 +164,10 @@ class Player extends Entity implements NetPackable {
   void set_stance(boolean standing) {
     if (standing) {
       body_height = HEIGHT_STANDING;
+      ground_max_speed = GROUND_MAX_SPEED_STANDING;
     } else {
       body_height = HEIGHT_CROUCHED;
+      ground_max_speed = GROUND_MAX_SPEED_CROUCHED;
     }
     ((RayCastShapeCylinder)hitbox).cylinder_height = body_height;
   }
@@ -174,11 +181,13 @@ class Player extends Entity implements NetPackable {
   }
 
   void hit(VecPair intersects, float damage) {
-    set_stance(!is_standing());
-    props.add(new PropBox(intersects.a, VEC(0.1, 0.1, 0.1), false));
-  }
-
-  void get_ground_speed() {
+    health -= damage;
+    if (health <= 0) {
+      health = INIT_HEALTH;
+      spawn_player(this, random(0, 2)<1);
+    }
+    //set_stance(!is_standing());
+    //props.add(new PropBox(intersects.a, VEC(0.1, 0.1, 0.1), false));
   }
 
   RayCastResult cast_eye_ray() {
@@ -208,33 +217,35 @@ class Player extends Entity implements NetPackable {
     s += net_vec_to_string(vel) + ";";
     s += orient_angle_horizontal + ";";
     s += orient_angle_vertical + ";";
+    s += is_standing() + ";";
     s += gun_shooting + ";";
     return s;
   }
-  
+
   void unpack(String s) {
     String[] lines = s.split(";");
     //for(String l : lines) {
     //  println(l);
     //}
     //println(lines.length);
-    if(lines.length == 5) {
+    if (lines.length == 6) {
       pos = net_string_to_vec(lines[0]);
       vel = net_string_to_vec(lines[1]);
       orient_angle_horizontal = float(lines[2]);
       orient_angle_vertical = float(lines[3]);
-      gun_shooting = boolean(lines[4]);
+      set_stance(boolean(lines[4]));
+      gun_shooting = boolean(lines[5]);
     } else {
       println("ERROR: Could not unpack: \"" + s + "\"");
     }
   }
 }
 
-void spawn_local_player(boolean team_ab) {
+void spawn_player(Player p, boolean team_ab) {
   if (team_ab) {
-    local_player.pos = spawn_team_cross.copy();
+    p.pos = spawn_team_cross.copy();
   } else {
-    local_player.pos = spawn_team_star.copy();
+    p.pos = spawn_team_star.copy();
   }
 }
 

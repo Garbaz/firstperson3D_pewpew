@@ -19,8 +19,8 @@ PImage pew_image;
 GLWindow gl_window;
 
 void settings() {
-  size(800, 800, P3D);
-  //fullScreen(P3D);
+  //size(800, 800, P3D);
+  fullScreen(P3D);
 }
 void setup() {
   frameRate(144);
@@ -55,18 +55,17 @@ void setup() {
   //  props.add(new PropBox(VEC(-3, 0, 2*i), VEC(2, 0.1*i, 2), true));
   //}
   load_level("test_level - Kopie.csv");
-  
+
   init_network_id();
-  
+
   local_player = new Player();
   perspective_player = local_player;
   add_player(net_local_id, local_player);
-  
-  spawn_local_player(true);
+  local_player.hit(null, 100);
 
   net_host();
   //net_connect("192.168.178.127");
-  
+
   //players.add(new Player(VEC(5.6, 40, 0)));
   deltatime_lasttime = millis();
 }
@@ -97,7 +96,7 @@ void draw() {
 
   net_update(dt);
   //println(local_player.pack());
-  
+
   draw_ui(dt);
 }
 

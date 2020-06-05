@@ -56,7 +56,6 @@ void net_update(float dt) {
 void recieve_client(Client c) {
   if (c.available() > 0) {
     String[] lines = c.readString().split("\n");
-    println(lines);
     for (String l : lines) {
       String[] id_pack = l.split(";", 2);
       if (id_pack.length == 2) {
@@ -65,6 +64,7 @@ void recieve_client(Client c) {
           String pack = id_pack[1];
           Player p = players.get(id);
           if (p == null) {
+            println("New Player with net_id " + id);1
             p = new Player();
             players.put(id, p);
           }

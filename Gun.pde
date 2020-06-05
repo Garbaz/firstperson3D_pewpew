@@ -9,7 +9,7 @@ class Gun {
 
   float shoot_fire_period = 1.0/10;
 
-  float hit_damage = 10;
+  float hit_damage = 25;
 
   void update(float dt, boolean shooting, Player holder) {
     shoot_timer += dt;
