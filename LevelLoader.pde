@@ -20,7 +20,10 @@ void load_level(String path) {
         } else if ('a' <= c && c <= 'z') {
           add_prop(new PropBox(VEC(x, 0, z), VEC(LEVEL_SCALE_XZ, int(10+c-'a')*LEVE_SCALE_Y, LEVEL_SCALE_XZ), true));
         } else if ('A' <= c && c <= 'Z') {
-          add_prop(new PropBox(VEC(x, int((10+c-'A'))*LEVE_SCALE_Y, z), VEC(LEVEL_SCALE_XZ, int(36-(10+c-'A'))*LEVE_SCALE_Y, LEVEL_SCALE_XZ), true));
+          // add_prop(new PropBox(VEC(x, int((10+c-'A'))*LEVE_SCALE_Y, z), VEC(LEVEL_SCALE_XZ, int(36-(10+c-'A'))*LEVE_SCALE_Y, LEVEL_SCALE_XZ), true));
+          add_prop(new PropBox(VEC(x, int((10+c-'A'))*LEVE_SCALE_Y, z), VEC(LEVEL_SCALE_XZ, int(100-(10+c-'A'))*LEVE_SCALE_Y, LEVEL_SCALE_XZ), true));
+        } else if (c == '!') {
+          add_prop(new PropBox(VEC(x, 0, z), VEC(LEVEL_SCALE_XZ, 100*LEVE_SCALE_Y, LEVEL_SCALE_XZ), true));
         } else if (c == '+') {
           spawn_team_cross = VEC(x, 2, z);
         } else if (c == '*') {
