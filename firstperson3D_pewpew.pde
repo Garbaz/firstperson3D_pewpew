@@ -74,6 +74,9 @@ void setup() {
 
 void draw() {
   background(#D4F2FA);
+  directionalLight(200, 200, 180, 0.4330127, -0.5, 0.75);
+  ambientLight(150, 160, 160);
+
   float dt = TIME_SCALE*deltatime();
 
   for (Prop p : props) {

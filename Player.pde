@@ -91,8 +91,9 @@ class Player extends Entity implements NetPackable {
     //  on_ground = true;
     //}
     if (on_ground) {
-      float vel_new_mag = vel.mag()*min(1, 1 - dt*GROUND_FRICTION_FACTOR);
-      if (vel_new_mag < 0) {
+      float vel_mag = vel.mag();
+      float vel_new_mag = vel_mag*min(1, 1 - dt*GROUND_FRICTION_FACTOR);
+      if (vel_new_mag < 0) {//TODO: Stop even earlier -> Flo's code?
         vel_new_mag = 0;
       }
       vel.setMag(vel_new_mag); // Deceleration

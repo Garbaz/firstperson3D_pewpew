@@ -22,12 +22,14 @@ void perspective_projection(float fov_degrees) {
 void ui_begin() {
   push();
   camera();
+  noLights();
   hint(DISABLE_DEPTH_TEST);
   perspective_projection(VIEW_UI_FOV);
 }
 
 void ui_end() {
-  hint(ENABLE_DEPTH_TEST);
   perspective_projection(VIEW_FOV);
+  hint(ENABLE_DEPTH_TEST);
+  lights();
   pop();
 }
