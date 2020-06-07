@@ -1,17 +1,18 @@
 class Player extends Entity implements NetPackable {
   final float HEIGHT_STANDING = 1.8;
   final float HEIGHT_CROUCHED = 1.1;
-  final float HEIGHT_EYE_OFFSET = -0.1; // How far down the camera is from the top of the player
+  final float HEIGHT_EYE_OFFSET = -0.2; // How far down the camera is from the top of the player
   float body_height = HEIGHT_STANDING;
 
-  final float GROUND_MAX_SPEED_STANDING = 7;
-  final float GROUND_MAX_SPEED_CROUCHED = 4;
+  final float GROUND_MAX_SPEED_STANDING = 0.025 * 250;
+  final float GROUND_MAX_SPEED_CROUCHED = 0.025 * 85;
   float ground_max_speed = GROUND_MAX_SPEED_STANDING;
-  final float GROUND_ACCELERATION = 25; // and deceleration
-  final float AIR_MAX_STRAFE_SPEED = 0.8;
-  final float AIR_ACCELERATION = 100;
-  final float JUMP_SPEED = 5.4;
-  final float GRAVITY = 9.8;
+  final float GROUND_ACCELERATION_FACTOR = 5.5;
+  final float GROUND_FRICTION_FACTOR = 5.2;
+  final float AIR_MAX_STRAFE_SPEED = 0.025 * 30;
+  final float AIR_ACCELERATION_FACTOR = 100;
+  final float JUMP_SPEED = 0.025 * 301.993377;
+  final float GRAVITY = 0.025 * 800;
 
   final float COLLISION_RADIUS = 0.5;
   final float COLLISION_STEP_MARGIN = 0.11;
@@ -68,15 +69,14 @@ class Player extends Entity implements NetPackable {
     //}
 
     if (on_ground) {
-      vec_add_scaled(vel, dir_move, 2 * GROUND_ACCELERATION * dt); // Acceleration    
-      vel.setMag(constrain(vel.mag() - GROUND_ACCELERATION * dt, 0, Float.MAX_VALUE)); // Deceleration
-      
+      vec_add_scaled(vel, dir_move, dt * GROUND_ACCELERATION_FACTOR*ground_max_speed); // Acceleration
+
       if (dir_move.dot(vel) > ground_max_speed) {
         vel.setMag(ground_max_speed);
       }
     } else { // in air
       if (dir_move.dot(vel) < AIR_MAX_STRAFE_SPEED) {
-        vec_add_scaled(vel, dir_move, AIR_ACCELERATION * dt);
+        vec_add_scaled(vel, dir_move, AIR_ACCELERATION_FACTOR * AIR_MAX_STRAFE_SPEED * dt);
       }
     }
 
@@ -90,7 +90,13 @@ class Player extends Entity implements NetPackable {
     //  vel.y = 0;
     //  on_ground = true;
     //}
-
+    if (on_ground) {
+      float vel_new_mag = vel.mag()*min(1, 1 - dt*GROUND_FRICTION_FACTOR);
+      if (vel_new_mag < 0) {
+        vel_new_mag = 0;
+      }
+      vel.setMag(vel_new_mag); // Deceleration
+    }
 
     vec_add_scaled(vel, VEC_DOWN, GRAVITY * dt);
     vec_add_scaled(pos, vel, dt);
@@ -102,7 +108,7 @@ class Player extends Entity implements NetPackable {
       if (col != null) {
         pos.add(col);
         PVector normal_vel = col.copy().normalize();
-        normal_vel.mult(min(vel.dot(normal_vel), 0));
+        normal_vel.mult(vel.dot(normal_vel));
         vel.sub(normal_vel);
         if (col.y > 0) {
           on_ground = true;
@@ -204,7 +210,7 @@ class Player extends Entity implements NetPackable {
 
   void set_orientation(float horizontal, float vertical) {
     orient_angle_horizontal = (horizontal+TWO_PI) % TWO_PI;
-    orient_angle_vertical = constrain(vertical, -HALF_PI, HALF_PI);
+    orient_angle_vertical = constrain(vertical, -0.99*HALF_PI, 0.99*HALF_PI);
   }
 
   void rotate_orientation(float delta_horizontal, float delta_vertical) {

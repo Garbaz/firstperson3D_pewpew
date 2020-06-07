@@ -1,6 +1,8 @@
 import com.jogamp.newt.opengl.GLWindow;
 import processing.net.*;
 
+final float TIME_SCALE = 1.0;
+
 //ArrayList<Player> players = new ArrayList<Player>();
 HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 Player perspective_player;
@@ -72,7 +74,7 @@ void setup() {
 
 void draw() {
   background(#D4F2FA);
-  float dt = deltatime();
+  float dt = TIME_SCALE*deltatime();
 
   for (Prop p : props) {
     p.update(dt);

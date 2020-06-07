@@ -1,6 +1,6 @@
 
 
-final float INPUT_MOUSE_SENS = 3.0*radians(0.022);
+final float INPUT_MOUSE_SENS = 2.0*radians(0.022);
 
 int input_move_right = 0;
 int input_move_forward = 0;
