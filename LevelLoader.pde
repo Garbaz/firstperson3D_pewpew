@@ -1,3 +1,5 @@
+PVector spawn_team_cross = VEC(), spawn_team_star = VEC();
+
 final float LEVEL_SCALE_XZ = 1.0;
 final float LEVE_SCALE_Y = 0.1;
 

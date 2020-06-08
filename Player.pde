@@ -1,3 +1,7 @@
+HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+Player perspective_player;
+Player local_player;
+
 class Player extends Entity implements NetPackable {
   final float HEIGHT_STANDING = 1.8;
   final float HEIGHT_CROUCHED = 1.1;
@@ -83,7 +87,7 @@ class Player extends Entity implements NetPackable {
     gun_shooting = is_keybind_pressed("player_shoot");
   }
 
-  void update(float dt) {
+  boolean update(float dt) {
 
     //if (pos.y < 0) {
     //  pos.y = 0;
@@ -122,6 +126,8 @@ class Player extends Entity implements NetPackable {
     }
 
     gun.update(dt, gun_shooting, this);
+
+    return true;
   }
 
   void show(float dt) {
@@ -187,7 +193,8 @@ class Player extends Entity implements NetPackable {
     return VEC(pos.x, pos.y-(body_height)/2, pos.z);
   }
 
-  void hit(VecPair intersects, float damage) {
+  void hit(IntersectResult intersects, float damage) {
+    super.hit(intersects, damage);
     health -= damage;
     if (health <= 0) {
       health = INIT_HEALTH;

@@ -3,20 +3,7 @@ import processing.net.*;
 
 final float TIME_SCALE = 1.0;
 
-//ArrayList<Player> players = new ArrayList<Player>();
-HashMap<Integer, Player> players = new HashMap<Integer, Player>();
-Player perspective_player;
-Player local_player;
 
-PVector spawn_team_cross = VEC(), spawn_team_star = VEC();
-
-ArrayList<Prop> props = new ArrayList<Prop>();
-
-float test_rot = 0;
-
-PShape player_shape, player_gun_shape;
-//PShader player_shader, player_gun_shader;
-PImage pew_image;
 
 GLWindow gl_window;
 
@@ -31,44 +18,33 @@ void setup() {
   mouseX = width/2;
   mouseY = height/2;
   //gl_window.confinePointer(true);
+  perspective_projection(VIEW_FOV);
 
   setup_key_binds();
 
-  perspective_projection(VIEW_FOV);
+  load_global_assets();
 
-  player_shape = loadShape("assets/player_shape.obj");
-  player_shape.setFill(#700000);
-  player_gun_shape = loadShape("assets/player_gun.obj");
-  player_gun_shape.setTexture(loadImage("assets/player_gun_tex.jpg"));
-  //player_gun_shape = loadShape("assets/kar98k.obj");
-  //player_gun_shape.setTexture(loadImage("assets/kar98k_texture.jpg"));
-
-  pew_image = loadImage("assets/pew.png");
-
-
-
-  //props.add(new PropBox(VEC(0, -1, 0), VEC(200, 1, 200), true));
-  //for (int i = 0; i < 20; i++) {
-  //  props.add(new PropBox(VEC(random(-100, 100), 0.0, random(-100, 100)), VEC(random(2, 6), random(0.5, 1), random(2, 6)), true));
-  //}
-  //props.add(new PropBox(VEC(4, 0, 0), VEC(2, 1, 6), true));
-
-  //for (int i = 1; i < 25; i++) {
-  //  props.add(new PropBox(VEC(-3, 0, 2*i), VEC(2, 0.1*i, 2), true));
-  //}
   load_level("levels/de_cache.csv");
+  //add_prop(new PropBox(VEC(0, -1, 0), VEC(100, 1, 100), true));
+  //add_prop(new PropBox(VEC(0, 1.5, 2), VEC(1, 1, 1)));
+  //props.get(0).shape.disable();
 
   init_network_id();
 
   local_player = new Player();
   perspective_player = local_player;
   add_player(net_local_id, local_player);
-  local_player.hit(null, 100);
+  local_player.hit(null, 9001);
+
+  //add_player(1337, new Player(spawn_team_cross));
 
   net_host();
   //net_connect("192.168.178.127");
 
+  //particles.add(new Particle(spawn_team_cross));
+
   //players.add(new Player(VEC(5.6, 40, 0)));
+
   deltatime_lasttime = millis();
 }
 
@@ -96,8 +72,18 @@ void draw() {
       p.show(dt);
     }
   }
-
   perspective_player.show(dt);//Drawing perspective player last because of pew transparency....
+
+  ArrayList<Particle> particles_tbr = new ArrayList<Particle>();
+  for (Particle p : particles) {
+    if (!p.update(dt)) {
+      particles_tbr.add(p);
+    }
+  }
+  particles.removeAll(particles_tbr);
+  for (Particle p : particles) {
+    p.show(dt);
+  }
 
   net_update(dt);
   //println(local_player.pack());

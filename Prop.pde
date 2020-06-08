@@ -1,6 +1,9 @@
+ArrayList<Prop> props = new ArrayList<Prop>();
+
 abstract class Prop extends Entity {
   PShape model;
   PShader shader;
+  RayCastShape shape;
 
   Prop(PVector pos, PShape model, PShader shader) {
     super(pos);
@@ -22,13 +25,15 @@ class PropBox extends Prop {
       this.pos.add(0, dimensions.y/2, 0);
     }
     this.dimensions = dimensions.copy();
+    this.shape = new RayCastShapeCuboid(this, VEC(0), dimensions);
   }
 
   PropBox(PVector pos, PVector dimensions) {
     this(pos, dimensions, false);
   }
 
-  void update(float dt) {
+  boolean update(float dt) {
+    return true;
   }
 
   void show(float dt) {

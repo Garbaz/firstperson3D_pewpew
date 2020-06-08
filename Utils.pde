@@ -42,6 +42,10 @@ PVector vec_xz(PVector v) {
   return VEC(v.x, v.z);
 }
 
+float vec_dist_sq(PVector v1, PVector v2) {
+  return sq(v1.x-v2.x)+sq(v1.y-v2.y)+sq(v1.z-v2.z);
+}
+
 int sign(float x) {
   if (x < 0) return -1;
   if (x > 0) return 1;
@@ -86,9 +90,9 @@ String nfs(PVector v, int left, int right) {
 String nfss(float x, int left, int right) {
   String s = nfs(x, left, right);
   char[] sa = s.toCharArray();
-  for(int i = 0; i < sa.length; i++) {
-    if(!(sa[i] == ' ' || sa[i] == '-')) {
-      if(sa[i] == '0') {
+  for (int i = 0; i < sa.length; i++) {
+    if (!(sa[i] == ' ' || sa[i] == '-')) {
+      if (sa[i] == '0') {
         sa[i] = ' ';
       } else {
         break;
@@ -144,7 +148,7 @@ PVector intersect_line_triangle(PVector bl, PVector l, PVector bp, PVector p1, P
   }
 }
 
-VecPair intersect2D_line_circle(PVector line_base, PVector line_dir, PVector circle_pos, float circle_radius) {
+IntersectResult intersect2D_line_circle(PVector line_base, PVector line_dir, PVector circle_pos, float circle_radius) {
   line_base = PVector.sub(line_base, circle_pos);
   //float a = sq(line_dir.x) + sq(line_dir.y);
   float p_half = (line_base.x*line_dir.x + line_base.y*line_dir.y);
@@ -171,14 +175,14 @@ VecPair intersect2D_line_circle(PVector line_base, PVector line_dir, PVector cir
   //println(sol1);
   //println(sol2);
 
-  return new VecPair(sol1, sol2);
+  return new IntersectResult(sol1, sol2, null, null);
 }
 
-VecPair intersect2D_line_aa_rect(PVector line_base, PVector line_dir, PVector rect_pos, PVector rect_dim) {
+IntersectResult intersect2D_line_aa_rect(PVector line_base, PVector line_dir, PVector rect_pos, PVector rect_dim) {
   line_base = PVector.sub(line_base, rect_pos);
   //PVector rect_rad = PVector.mult(rect_dim, 0.5);
 
-  VecPair sol = new VecPair();
+  IntersectResult sol = new IntersectResult();
 
   float bs = line_base.x/rect_dim.x + line_base.y/rect_dim.y;
   float bd = line_base.x/rect_dim.x - line_base.y/rect_dim.y;
@@ -191,16 +195,16 @@ VecPair intersect2D_line_aa_rect(PVector line_base, PVector line_dir, PVector re
       PVector s = vec_add_scaled(line_base.copy(), line_dir, t);
       if ((ss*sd < 0 && abs(s.x) <= rect_dim.x/2) || (ss*sd > 0 && abs(s.y) <= rect_dim.y/2)) {
         s.z = t;
-        sol.append(s);
+        sol.append(s, null);
       }
     }
   }
 
-  if (sol.a != null && sol.b != null && (sol.a.z >= 0 || sol.b.z >= 0)) {
-    sol.a.z = 0;
-    sol.b.z = 0;
-    sol.a.add(rect_pos);
-    sol.b.add(rect_pos);
+  if (sol.first != null && sol.second != null && (sol.first.z >= 0 || sol.second.z >= 0)) {
+    sol.first.z = 0;
+    sol.second.z = 0;
+    sol.first.add(rect_pos);
+    sol.second.add(rect_pos);
     return sol;
   } else {
     return null;

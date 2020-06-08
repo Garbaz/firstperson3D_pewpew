@@ -24,8 +24,9 @@ class Gun {
     shoot_timer = 0;
 
     RayCastResult r = holder.cast_eye_ray();
+    //println(r);
     if (r != null) {
-      r.shape.owner.hit(r.intersects, hit_damage);
+      r.shape.parent.hit(r.intersects, hit_damage);
     }
   }
 

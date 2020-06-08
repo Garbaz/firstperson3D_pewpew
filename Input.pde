@@ -76,10 +76,6 @@ FloatPair mouse_input() {
   }
 }
 
-void mouseWheel(MouseEvent e) {
-  test_rot -= e.getCount();
-}
-
 //void keyPressed(KeyEvent e) {
 //  println(e.getAction());
 //  if (!e.isAutoRepeat()) {
