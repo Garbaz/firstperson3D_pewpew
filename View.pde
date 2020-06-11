@@ -10,6 +10,7 @@ void update_camera() {
   } else {
     perspective_projection(VIEW_FOV);
   }
+  
   PVector position = perspective_player.get_eye_position();
   PVector camera_dir = perspective_player.get_eye_direction();
   camera(position.x, position.y, position.z, position.x+camera_dir.x, position.y+camera_dir.y, position.z+camera_dir.z, 0, -1, 0);

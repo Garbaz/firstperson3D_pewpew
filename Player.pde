@@ -50,7 +50,7 @@ class Player extends Entity implements NetPackable {
 
   void update_input(float dt) {
     FloatPair delta_orientation = mouse_input();
-    local_player.rotate_orientation(delta_orientation.a, delta_orientation.b);
+    rotate_orientation(delta_orientation.a, delta_orientation.b);
 
     PVector dir_forward = VEC(sin(orient_angle_horizontal), 0, cos(orient_angle_horizontal));
     PVector dir_right = VEC(dir_forward.z, 0, -dir_forward.x);
