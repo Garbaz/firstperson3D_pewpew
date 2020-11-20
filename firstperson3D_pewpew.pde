@@ -46,6 +46,7 @@ void setup() {
   //players.add(new Player(VEC(5.6, 40, 0)));
 
   deltatime_lasttime = millis();
+  //local_player.pos.y += 10;
 }
 
 void draw() {
